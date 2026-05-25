@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<!-- saved from url=(0241)file:///Users/ophir.kra-oz/Library/Application%20Support/Claude/local-agent-mode-sessions/48670cc6-2f89-45fc-af0e-cbcd8ecfe746/7ee42d67-bc12-484f-9f6c-18217629853f/local_5e2ced21-3e90-40fa-8a74-1460eb0403f1/outputs/jewish_celebrity_quiz.html -->
+<html lang="he" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מי יהודי? – משחק טריוויה</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#f2f1ec;min-height:100vh;padding:1.5rem 1rem}
+.game-layout{display:flex;max-width:860px;margin:0 auto;gap:10px;align-items:flex-start}
+.container{flex:1;min-width:0;background:#fff;border-radius:18px;padding:1.75rem;box-shadow:0 2px 24px rgba(0,0,0,.07)}
+.side-col{width:82px;flex-shrink:0;background:#fff;border-radius:14px;padding:.75rem .4rem;box-shadow:0 2px 12px rgba(0,0,0,.05);position:sticky;top:1rem;min-height:80px}
+.panel-title{font-size:10px;font-weight:700;text-align:center;margin-bottom:8px;padding:3px 6px;border-radius:20px}
+.jewish-col .panel-title{background:#d4edba;color:#2d6b08}
+.other-col .panel-title{background:#fcd9d9;color:#9b2020}
+.panel-item{text-align:center;margin-bottom:8px}
+.panel-photo{width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:top center;display:block;margin:0 auto 3px;border:2.5px solid #b2e08a}
+.other-col .panel-photo{border-color:#f5a5a5}
+.panel-ph{width:56px;height:56px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#bbb;margin:0 auto 3px;border:2.5px solid #b2e08a}
+.other-col .panel-ph{border-color:#f5a5a5}
+.panel-name{font-size:8.5px;color:#888;line-height:1.2;word-break:break-word}
+h1{text-align:center;font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:2px}
+.subtitle{text-align:center;font-size:13px;color:#999;margin-bottom:1.25rem}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;padding:10px 14px;background:#f9f8f4;border-radius:10px}
+.score-wrap .lbl{font-size:12px;color:#aaa}
+.score-wrap .val{font-size:22px;font-weight:700;color:#1a1a1a}
+.streak{font-size:13px;color:#e6820a;font-weight:600}
+.progress{font-size:13px;color:#aaa}
+.question{font-size:15px;color:#666;text-align:center;margin-bottom:1rem}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:.9rem}
+.card{background:#fff;border:1.5px solid #ebebeb;border-radius:14px;padding:1rem .75rem;cursor:pointer;transition:border-color .15s,background .15s,transform .12s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.card:hover{border-color:#ccc;background:#fafafa;transform:translateY(-2px)}
+.card.correct{background:#eaf3de;border-color:#5a9e1b}
+.card.wrong{background:#fceaea;border-color:#e04b4a}
+.card.reveal{background:#eaf3de;border-color:#5a9e1b}
+.card.disabled{cursor:default;transform:none!important}
+.celeb-photo{width:100px;height:100px;border-radius:50%;object-fit:cover;object-position:top center;background:#f0f0f0;border:2px solid #e8e8e8;display:block;flex-shrink:0}
+.photo-ph{width:100px;height:100px;border-radius:50%;background:#f0f0f0;border:2px solid #e8e8e8;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#bbb;flex-shrink:0}
+.card-name{font-size:14px;font-weight:700;color:#1a1a1a;line-height:1.3}
+.card-hint{font-size:11px;color:#aaa;line-height:1.4}
+.card-result{font-size:12px;font-weight:700;min-height:17px}
+.card.correct .card-result{color:#3b7d0f}
+.card.wrong .card-result{color:#b03030}
+.card.reveal .card-result{color:#3b7d0f}
+.feedback{text-align:center;font-size:13px;color:#555;min-height:48px;padding:10px 14px;background:#f9f8f4;border-radius:10px;margin-bottom:.9rem;line-height:1.6}
+.next-btn{display:block;width:100%;padding:11px;font-size:15px;cursor:pointer;background:#1a1a1a;color:#fff;border:none;border-radius:10px;font-family:inherit;font-weight:600;transition:background .15s}
+.next-btn:hover{background:#333}
+.end-screen{text-align:center;padding:1.5rem 0}
+.end-star{font-size:40px;margin-bottom:8px}
+.end-score{font-size:52px;font-weight:800;color:#1a1a1a;margin-bottom:2px}
+.end-pct{font-size:15px;color:#aaa;margin-bottom:1rem}
+.end-msg{font-size:17px;color:#333;margin-bottom:1.5rem;line-height:1.5}
+.loading{text-align:center;padding:3rem 1rem;color:#aaa;font-size:14px}
+.spin{font-size:36px;animation:spin 1.5s linear infinite;display:inline-block;margin-bottom:14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cat-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;background:#f0f0f0;color:#888;margin-top:2px}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.timer-bg{flex:1;height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+.timer-fill{height:100%;border-radius:4px;transition:width .1s linear,background .3s}
+.timer-num{font-size:15px;font-weight:700;min-width:22px;text-align:center;color:#1a1a1a}
+.timer-num.urgent{color:#e04b4a;animation:pulse .4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.key-badge{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:#1a1a1a;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;opacity:.55}
+.card{position:relative}
+.side-label{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:2px;letter-spacing:.3px}
+.jewish-label{background:#d4edba;color:#2d6b08}
+.other-label{background:#fcd9d9;color:#9b2020}
+.card.correct{animation:pop .25s ease}
+@keyframes pop{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.topbar{background:linear-gradient(135deg,#f9f8f4,#f0ede4)}
+</style>
+</head>
+<body>
+<div class="game-layout">
+  <!-- ימין = יהודים (ב-RTL, הראשון בדום = ימין) -->
+  <div class="side-col jewish-col" id="jewish-panel"><div class="panel-title">✡ יהודים</div><div class="panel-item"><img class="panel-photo" src="./JewCelebGame_files/Jon-stewart-cropped-portrait-2025.jpg" alt="ג&#39;ון סטיוארט"><div class="panel-name">ג'ון סטיוארט</div></div></div>
+  <!-- מרכז = השאלה -->
+  <div class="container">
+    <h1>✡ מי יהודי? 🤔</h1>
+    <p class="subtitle">משחק טריוויה עם 200+ מפורסמים – האם אתה מכיר?</p>
+    <div id="app">
+    <div class="topbar">
+      <div class="score-wrap"><div class="lbl">ניקוד</div><div class="val">0</div></div>
+      <div></div>
+      <div class="progress">2 / 10</div>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-bg"><div id="tbar" class="timer-fill" style="width: 43%; background: rgb(230, 130, 10);"></div></div>
+      <div id="tnum" class="timer-num">5</div>
+    </div>
+    <p class="question">מי מהם? 🧐</p>
+    <div class="cards">
+      
+        <div class="card" id="card-0" onclick="answer(true,0,1)">
+          <div class="key-badge">1</div>
+          <img class="celeb-photo" src="./JewCelebGame_files/2024-03-08_SXSW-2024_comedy-directors_3.jpg" alt="ג&#39;אד אפאטו" loading="lazy">
+          <div class="card-name">ג'אד אפאטו</div>
+          <div class="card-hint">במאי, Knocked Up, The 40-Year-Old Virgin</div>
+          <div class="cat-badge">בידור</div>
+          <div class="card-result" id="res-0"></div>
+        </div>
+      
+        <div class="card" id="card-1" onclick="answer(false,1,0)">
+          <div class="key-badge">2</div>
+          <img class="celeb-photo" src="./JewCelebGame_files/Stephen_Hawking.StarChild.jpg" alt="סטיבן הוקינג" loading="lazy">
+          <div class="card-name">סטיבן הוקינג</div>
+          <div class="card-hint">פיזיקאי, A Brief History of Time</div>
+          <div class="cat-badge">מדע</div>
+          <div class="card-result" id="res-1"></div>
+        </div>
+      
+    </div>
+    <div class="feedback" id="fb">👆 לחץ או השתמש במקשים 1 / 2</div>
+    <button class="next-btn" id="nb" style="display:none"></button>
+    <p style="text-align:center;font-size:11px;color:#ccc;margin-top:.5rem">מקש <b style="color:#aaa">1</b> לכרטיס הראשון &nbsp;·&nbsp; מקש <b style="color:#aaa">2</b> לכרטיס השני &nbsp;·&nbsp; Enter להמשך</p></div>
+  </div>
+  <!-- שמאל = לא יהודים -->
+  <div class="side-col other-col" id="other-panel"><div class="panel-title">לא יהודים</div><div class="panel-item"><img class="panel-photo" src="./JewCelebGame_files/Julia_Roberts_2025.jpg" alt="ג&#39;וליה רוברטס"><div class="panel-name">ג'וליה רוברטס</div></div></div>
+</div>
+
+<script>
+/* ─── DATA ─────────────────────────────────────────────────────────── */
+/* j=jewish halachically, n=not jewish, p=paternal only (Jewish father, not halachic) */
+/* fields: n=hebrew name, e=wikipedia title, h=hebrew hint, f=hebrew fact, c=category */
+
+const JEWISH = [
+  /* ── ENTERTAINMENT / ACTORS ── */
+  {n:"ג'רי סיינפלד",e:"Jerry Seinfeld",h:"קומיקאי, יוצר 'סיינפלד'",f:"גדל כיהודי בניו יורק. ביקר בישראל פעמים רבות וגאה בזהותו היהודית.",c:"בידור"},
+  {n:"אדם סנדלר",e:"Adam Sandler",h:"קומיקאי ושחקן, Uncut Gems",f:"מפורסם בשיר החנוכה שלו. אמר: 'אני יהודי וגאה בזה בכל יום.'",c:"בידור"},
+  {n:"בן סטילר",e:"Ben Stiller",h:"קומיקאי ובמאי, Zoolander",f:"שני הוריו – ג'רי סטילר ואן מיירה – קומיקאים יהודים מברוקלין.",c:"בידור"},
+  {n:"סשה בארון כהן",e:"Sacha Baron Cohen",h:"בורט, Ali G, Bruno",f:"גדל בלונדון, ביצע בר מצווה, ומשפחתו עלתה ממרוקו ולנדון.",c:"בידור"},
+  {n:"סת' רוגן",e:"Seth Rogen",h:"שחקן וקומיקאי קנדי",f:"גדל בוונקובר במשפחה יהודית-קנדית פעילה.",c:"בידור"},
+  {n:"ג'ונה היל",e:"Jonah Hill",h:"שחקן, Superbad, Wolf of Wall Street",f:"אמו שרון פלדסטיין יהודייה. ידוע כגאה בזהותו היהודית.",c:"בידור"},
+  {n:"בילי קריסטל",e:"Billy Crystal",h:"קומיקאי, City Slickers",f:"גדל בניו יורק במשפחה יהודית. הציג את 'ליל הצחוק' שנים רבות.",c:"בידור"},
+  {n:"מל ברוקס",e:"Mel Brooks",h:"במאי, The Producers, Spaceballs",f:"נולד כמלווין קמינסקי בברוקלין. הפיק את 'The Producers' – שיא ההומור היהודי.",c:"בידור"},
+  {n:"ג'ין וויילדר",e:"Gene Wilder",h:"שחקן, Willy Wonka",f:"נולד כג'רום סילברמן במילווקי. שימר זהות יהודית לאורך חייו.",c:"בידור"},
+  {n:"וודי אלן",e:"Woody Allen",h:"במאי וקומיקאי, Annie Hall",f:"נולד כאלן קוניגסברג בברוקלין. הוי היהודי-ניו-יורקי מרכזי ביצירתו.",c:"בידור"},
+  {n:"לארי דייויד",e:"Larry David",h:"יוצר Seinfeld ו-Curb Your Enthusiasm",f:"מברוקלין. 'אני יהודי-אתאיסט' – לדבריו.",c:"בידור"},
+  {n:"ג'ון סטיוארט",e:"Jon Stewart",h:"מגיש The Daily Show",f:"נולד כג'ונתן ליבוביץ. שינה שמו אך שמר על זהות יהודית.",c:"בידור"},
+  {n:"הווארד סטרן",e:"Howard Stern",h:"מלך הרדיו",f:"גדל בניו יורק במשפחה יהודית. קיים בר מצווה.",c:"בידור"},
+  {n:"ריצ'רד דריפוס",e:"Richard Dreyfuss",h:"שחקן, Jaws, Mr. Holland's Opus",f:"גדל בלוס אנג'לס. פעיל בנושאי חינוך אזרחי.",c:"בידור"},
+  {n:"דסטין הופמן",e:"Dustin Hoffman",h:"שחקן, The Graduate, Rain Man",f:"נולד בלוס אנג'לס. שני הוריו יהודים.",c:"בידור"},
+  {n:"ג'ף גולדבלאם",e:"Jeff Goldblum",h:"שחקן, Jurassic Park, The Fly",f:"גדל בפיטסבורג במשפחה יהודית.",c:"בידור"},
+  {n:"הארווי קיטל",e:"Harvey Keitel",h:"שחקן, Pulp Fiction, Taxi Driver",f:"נולד בברוקלין לאבות ממולדבה.",c:"בידור"},
+  {n:"ג'יימס קאן",e:"James Caan",h:"שחקן, The Godfather",f:"נולד בברוקלין לאב יהודי-גרמני ואם יהודייה.",c:"בידור"},
+  {n:"אליוט גולד",e:"Elliott Gould",h:"שחקן, M*A*S*H, בעלה לשעבר של סטרייסנד",f:"נולד כאליוט גולדסטיין בברוקלין.",c:"בידור"},
+  {n:"נטלי פורטמן",e:"Natalie Portman",h:"שחקנית, Black Swan, V for Vendetta",f:"נולדה בירושלים ועברה לארה\"ב בגיל 3. מדברת עברית שוטפת.",c:"בידור"},
+  {n:"גל גדות",e:"Gal Gadot",h:"שחקנית, Wonder Woman",f:"נולדה בפתח תקווה, שירתה בצבא ישראל, וזכתה במיס ישראל 2004.",c:"בידור"},
+  {n:"סקרלט ג'והנסון",e:"Scarlett Johansson",h:"שחקנית, Black Widow, Lost in Translation",f:"אמה מלאני סלואן יהודייה. לפי ההלכה – יהודייה לכל דבר.",c:"בידור"},
+  {n:"רייצ'ל וייז",e:"Rachel Weisz",h:"שחקנית, The Mummy, The Favourite",f:"אמה אדל ווייס יהודייה-אוסטרית. גדלה בלונדון.",c:"בידור"},
+  {n:"מילה קוניס",e:"Mila Kunis",h:"שחקנית, Black Swan, That '70s Show",f:"נולדה בצ'רנוביץ, אוקראינה, למשפחה יהודית-סובייטית.",c:"בידור"},
+  {n:"אמי רוסום",e:"Emmy Rossum",h:"שחקנית, Shameless, Phantom of the Opera",f:"אמה חרדה רוסום יהודייה. גדלה בניו יורק.",c:"בידור"},
+  {n:"ליסה קודרו",e:"Lisa Kudrow",h:"שחקנית, פיבי ב-Friends",f:"גדלה בלוס אנג'לס במשפחה יהודית. למדה בבית ספר יהודי.",c:"בידור"},
+  {n:"דברה מסינג",e:"Debra Messing",h:"שחקנית, Will & Grace",f:"גדלה בניו יורק. יהודייה גאה ופעילה בנושאים יהודיים.",c:"בידור"},
+  {n:"ג'ייק ג'ילנהול",e:"Jake Gyllenhaal",h:"שחקן, Brokeback Mountain, Nightcrawler",f:"אמו נעמי עקס יהודייה. ביקר בישראל.",c:"בידור"},
+  {n:"ג'וזף גורדון-לוויט",e:"Joseph Gordon-Levitt",h:"שחקן, Inception, 500 Days of Summer",f:"שני הוריו יהודים. גדל בלוס אנג'לס.",c:"בידור"},
+  {n:"זאק אפרון",e:"Zac Efron",h:"שחקן, High School Musical, Baywatch",f:"אמו סטארלה ברסמן יהודייה. גדל בקליפורניה.",c:"בידור"},
+  {n:"דניאל רדקליף",e:"Daniel Radcliffe",h:"שחקן, הארי פוטר",f:"אמו מרסיה גרשם יהודייה. אמר: 'אני יהודי מצד אמי'.",c:"בידור"},
+  {n:"הריסון פורד",e:"Harrison Ford",h:"שחקן, Indiana Jones, Han Solo",f:"אמו דורות'י נידלמן יהודייה. לפי ההלכה – יהודי.",c:"בידור"},
+  {n:"ג'יימס פרנקו",e:"James Franco",h:"שחקן ובמאי, 127 Hours",f:"אמו בטסי לו ורן יהודייה.",c:"בידור"},
+  {n:"קירק דאגלס",e:"Kirk Douglas",h:"שחקן אגדתי, Spartacus",f:"נולד כיסור דניילוביץ' לאבות יהודים שעלו מרוסיה.",c:"בידור"},
+  {n:"טוני קרטיס",e:"Tony Curtis",h:"שחקן, Some Like It Hot",f:"נולד כברנרד שוורץ בניו יורק להורים יהודים מהונגריה.",c:"בידור"},
+  {n:"וולטר מטאו",e:"Walter Matthau",h:"שחקן, The Odd Couple, Grumpy Old Men",f:"נולד כוולטר מטסקנסקי בניו יורק להורים יהודים.",c:"בידור"},
+  {n:"דייויד דוכובני",e:"David Duchovny",h:"שחקן, The X-Files, Californication",f:"אמו מג מינה גולדסמית יהודייה. גדל בניו יורק.",c:"בידור"},
+  {n:"אליסיה סילברסטון",e:"Alicia Silverstone",h:"שחקנית, Clueless",f:"אביה מונטי סילברסטון יהודי. גדלה בסן פרנסיסקו.",c:"בידור"},
+  {n:"מיים ביאליק",e:"Mayim Bialik",h:"שחקנית, The Big Bang Theory",f:"יהודייה שומרת-מסורת, פעילה מאד בקהילה היהודית.",c:"בידור"},
+  {n:"קייט הדסון",e:"Kate Hudson",h:"שחקנית, Almost Famous",f:"אמה גולדי האון יהודייה. גדלה בהוליווד.",c:"בידור"},
+  {n:"גולדי האון",e:"Goldie Hawn",h:"שחקנית ומפיקה, Private Benjamin",f:"גדלה בוושינגטון ד.ק. במשפחה יהודית. זכתה באוסקר.",c:"בידור"},
+  {n:"רשידה ג'ונס",e:"Rashida Jones",h:"שחקנית, Parks and Recreation",f:"אמה פגי ליפטון יהודייה. ביקרה בישראל.",c:"בידור"},
+  {n:"ג'ק בלאק",e:"Jack Black",h:"שחקן וזמר, School of Rock, Kung Fu Panda",f:"אמו ג'ודית' לאב כהן הייתה מהנדסת נאס\"א יהודייה.",c:"בידור"},
+  {n:"ג'ייסון אלכסנדר",e:"Jason Alexander",h:"שחקן, George ב-Seinfeld",f:"נולד כג'ייסון גרינשפן בניו ג'רזי. יהודי ברוקלין.",c:"בידור"},
+  {n:"פול ריובנס",e:"Paul Reubens",h:"שחקן, פי-וי הרמן",f:"נולד כפול רובנפלד. שני הוריו יהודים.",c:"בידור"},
+  {n:"רוב ריינר",e:"Rob Reiner",h:"במאי, When Harry Met Sally, A Few Good Men",f:"שני הוריו – ג'רי ריינר ואסטל ריינר – יהודים.",c:"בידור"},
+  {n:"קרל ריינר",e:"Carl Reiner",h:"קומיקאי ובמאי אגדתי",f:"גדל בברונקס, ניו יורק. אחד הקומיקאים היהודים הגדולים.",c:"בידור"},
+  {n:"דייויד שווימר",e:"David Schwimmer",h:"שחקן, Ross ב-Friends",f:"נולד בניו יורק. שני הוריו יהודים.",c:"בידור"},
+  {n:"ג'אד אפאטו",e:"Judd Apatow",h:"במאי, Knocked Up, The 40-Year-Old Virgin",f:"גדל בלונג איילנד במשפחה יהודית.",c:"בידור"},
+  {n:"אייסלה פישר",e:"Isla Fisher",h:"שחקנית, Wedding Crashers, Now You See Me",f:"התגיירה לפני נישואיה לסשה בארון כהן. לומדת עברית.",c:"בידור"},
+  {n:"שרה ג'סיקה פארקר",e:"Sarah Jessica Parker",h:"שחקנית, Sex and the City",f:"אמה ברברה פארקר יהודייה. גדלה באוהיו.",c:"בידור"},
+  {n:"ג'ינפר גודוין",e:"Ginnifer Goodwin",h:"שחקנית, Once Upon a Time, Big Love",f:"יהודייה מטנסי. ידועה בגאוותה היהודית.",c:"בידור"},
+  {n:"ג'רי לואיס",e:"Jerry Lewis",h:"קומיקאי אגדתי",f:"נולד כג'וזף לוויץ'. אגדה בצרפת, ידוע כ'מלך הקומדיה'.",c:"בידור"},
+  {n:"אדם לוין",e:"Adam Levine",h:"זמר Maroon 5",f:"שני הוריו יהודים. גדל בלוס אנג'לס.",c:"בידור"},
+  {n:"ג'רי ספרינגר",e:"Jerry Springer",h:"מגיש הטלוויזיה האמריקאי",f:"נולד בלונדון להורים שברחו מגרמניה הנאצית.",c:"בידור"},
+  {n:"מיק וואלאס",e:"Mike Wallace",h:"עיתונאי, 60 Minutes",f:"נולד כמיירון וואלאס בניו יורק לאבות יהודים.",c:"בידור"},
+  {n:"לארי קינג",e:"Larry King",h:"מגיש ראיונות אגדתי",f:"נולד כלארי זייגר בברוקלין. סמל הריאיון האמריקאי.",c:"בידור"},
+  {n:"ליזי קפלן",e:"Lizzy Caplan",h:"שחקנית, Masters of Sex",f:"גדלה בלוס אנג'לס במשפחה יהודית.",c:"בידור"},
+
+  /* ── ISRAELIS ── */
+  {n:"שירה האס",e:"Shira Haas",h:"שחקנית, Unorthodox, Fauda",f:"ישראלית, זכתה בפרסים בינלאומיים על תפקידה ב-Unorthodox.",c:"ישראלים"},
+  {n:"ליאור רז",e:"Lior Raz",h:"שחקן ויוצר, Fauda",f:"ישראלי, שירת במשמרת גבול. יצר ומשחק בסדרת הריגול 'פאודה'.",c:"ישראלים"},
+  {n:"ידן אמדי",e:"Idan Amedi",h:"שחקן וזמר, Fauda",f:"ישראלי, נפצע בפעילות מבצעית בעזה ב-2024 בזמן צילומי הסדרה.",c:"ישראלים"},
+  {n:"יעל גרובגלס",e:"Yael Grobglas",h:"שחקנית, Jane the Virgin",f:"ישראלית שפרצה להוליווד. מדברת עברית שוטפת.",c:"ישראלים"},
+  {n:"עדיה רוש",e:"Odeya Rush",h:"שחקנית, Goosebumps",f:"ישראלית, שירתה בצבא ישראל לפני שעברה לניו יורק.",c:"ישראלים"},
+  {n:"בר רפאלי",e:"Bar Refaeli",h:"דוגמנית ישראלית",f:"ישראלית, הייתה על שער Sports Illustrated Swimsuit.",c:"ישראלים"},
+
+  /* ── MUSIC ── */
+  {n:"איימי ויינהאוס",e:"Amy Winehouse",h:"זמרת, Rehab, Back to Black",f:"גדלה בצפון לונדון במשפחה יהודית. שרה בבת מצווה בגיל 13.",c:"מוזיקה"},
+  {n:"דרייק",e:"Drake (musician)",h:"ראפר וזמר, Hotline Bling",f:"אמו סנדי גרהאם יהודייה-קנדית. גדל בטורונטו ולמד בבית ספר יהודי.",c:"מוזיקה"},
+  {n:"פול סיימון",e:"Paul Simon",h:"מוזיקאי, Simon & Garfunkel, Graceland",f:"גדל בניו יורק במשפחה יהודית. ממוזיקאי הפולק-רוק הגדולים.",c:"מוזיקה"},
+  {n:"ארט גארפנקל",e:"Art Garfunkel",h:"מוזיקאי, Simon & Garfunkel",f:"גדל בניו יורק. שותפותו עם פול סיימון שינתה את המוזיקה.",c:"מוזיקה"},
+  {n:"בילי ג'ואל",e:"Billy Joel",h:"זמר, Piano Man, Uptown Girl",f:"אביו הווארד יואל נולד בנירנברג לאב יהודי-גרמני.",c:"מוזיקה"},
+  {n:"בארי מנילוב",e:"Barry Manilow",h:"זמר, Mandy, Copacabana",f:"נולד כבאריס אלן פינקוס בברוקלין.",c:"מוזיקה"},
+  {n:"ניל דיאמונד",e:"Neil Diamond",h:"זמר, Sweet Caroline, Cracklin' Rosie",f:"גדל בברוקלין. 'Sweet Caroline' נהיה שיר יהודי-אמריקאי קלאסי.",c:"מוזיקה"},
+  {n:"קרול קינג",e:"Carole King",h:"זמרת-יוצרת, Tapestry, I Feel the Earth Move",f:"נולדה כקרול קליין בברוקלין לאבות יהודים.",c:"מוזיקה"},
+  {n:"בט מידלר",e:"Bette Midler",h:"זמרת ושחקנית, The Rose, Wind Beneath My Wings",f:"נולדה בהונולולו להורים יהודים מניו יורק.",c:"מוזיקה"},
+  {n:"בארברה סטרייסנד",e:"Barbra Streisand",h:"זמרת ובמאית, Funny Girl, Evergreen",f:"נולדה בברוקלין. סמל תרבות יהודית-אמריקאית.",c:"מוזיקה"},
+  {n:"בוב דילן",e:"Bob Dylan",h:"מוזיקאי, Blowin' in the Wind, פרס נובל לספרות",f:"נולד כרוברט זימרמן בדולות', מינסוטה לאבות יהודים.",c:"מוזיקה"},
+  {n:"לאונרד כהן",e:"Leonard Cohen",h:"מוזיקאי ומשורר, Hallelujah",f:"גדל במונטריאול במשפחה יהודית. אחיינו של המשורר א.מ. קליין.",c:"מוזיקה"},
+  {n:"לו ריד",e:"Lou Reed",h:"מוזיקאי, Walk on the Wild Side, Velvet Underground",f:"נולד כלואיס אלן ריד בברוקלין לאבות יהודים.",c:"מוזיקה"},
+  {n:"לני קרביץ",e:"Lenny Kravitz",h:"מוזיקאי, Are You Gonna Go My Way",f:"אמו רוקסאן רוקר הייתה יהודייה-אמריקאית.",c:"מוזיקה"},
+  {n:"מארק קיובן",e:"Mark Cuban",h:"עסקן, בעלים של Dallas Mavericks",f:"גדל בפיטסבורג. ייצג את הגאווה היהודית בעולם העסקים.",c:"עסקים"},
+  {n:"מייקל דאגלס",e:"Michael Douglas",h:"שחקן, Basic Instinct, Wall Street",f:"אביו קירק דאגלס יהודי. מייקל מזדהה כיהודי, עשה בר מצווה לבנו דילן ואמר: 'אני גאה ביהדות שלי'.",c:"בידור"},
+
+  /* ── SCIENCE / NOBEL ── */
+  {n:"אלברט איינשטיין",e:"Albert Einstein",h:"פיזיקאי, תורת היחסות",f:"נולד בגרמניה למשפחה יהודית. ברח מהנאצים לארה\"ב. הצע לו להיות נשיא ישראל.",c:"מדע"},
+  {n:"ריצ'רד פיינמן",e:"Richard Feynman",h:"פיזיקאי, פרס נובל לפיזיקה 1965",f:"נולד בניו יורק. ידוע בגישתו הפשוטה לפיזיקה מורכבת.",c:"מדע"},
+  {n:"נילס בוהר",e:"Niels Bohr",h:"פיזיקאי, מודל האטום, פרס נובל 1922",f:"אמו אלן אדלר הייתה יהודייה-דנית. ברח מדנמרק הנאצית.",c:"מדע"},
+  {n:"מארי גל-מן",e:"Murray Gell-Mann",h:"פיזיקאי, גילה הקווארקים, פרס נובל 1969",f:"נולד בניו יורק. אביו היגר מאוסטריה.",c:"מדע"},
+  {n:"סטיבן וויינברג",e:"Steven Weinberg",h:"פיזיקאי, פרס נובל לפיזיקה 1979",f:"נולד בניו יורק לאבות יהודים. פיתח את תורת הכוחות המאוחדים.",c:"מדע"},
+  {n:"ג'ונס סאלק",e:"Jonas Salk",h:"מדען, פיתח את חיסון הפוליו",f:"נולד בניו יורק להורים יהודים. חיסון הפוליו הציל מיליוני חיים.",c:"מדע"},
+  {n:"רוברט אופנהיימר",e:"J. Robert Oppenheimer",h:"פיזיקאי, אבי הפצצה האטומית",f:"נולד בניו יורק למשפחה יהודית. הוביל את פרויקט מנהטן.",c:"מדע"},
+  {n:"זיגמונד פרויד",e:"Sigmund Freud",h:"מייסד הפסיכואנליזה",f:"נולד בפריבור, מוראביה. ברח מוינה לאחר הכיבוש הנאצי ב-1938.",c:"מדע"},
+  {n:"נועם חומסקי",e:"Noam Chomsky",h:"בלשן ופילוסוף, אחד ההוגים הגדולים",f:"נולד בפילדלפיה. אביו היה חוקר עברית. מדבר עברית.",c:"מדע"},
+  {n:"חנה ארנדט",e:"Hannah Arendt",h:"פילוסופית פוליטית, The Origins of Totalitarianism",f:"נולדה בהנובר למשפחה יהודית. ברחה מגרמניה ב-1933.",c:"מדע"},
+  {n:"אלי ויזל",e:"Elie Wiesel",h:"סופר וניצול שואה, פרס נובל לשלום 1986",f:"נולד בסיגהט, רומניה. שרד את אושוויץ. כתב 'לילה'.",c:"מדע"},
+  {n:"גיאורג' סורוס",e:"George Soros",h:"משקיע ופילנתרופ, שבר את הלירה הבריטית",f:"נולד כג'ורג' שוורץ בבודפשט. שרד את השואה בגיל 14.",c:"עסקים"},
+  {n:"סרגיי ברין",e:"Sergey Brin",h:"מייסד גוגל",f:"נולד במוסקבה למשפחה יהודית-רוסית. היגר לארה\"ב עם משפחתו.",c:"עסקים"},
+  {n:"לארי אליסון",e:"Larry Ellison",h:"מייסד אורקל",f:"אמו ממשפחה יהודית. גדל בשיקגו. אחד העשירים בעולם.",c:"עסקים"},
+  {n:"מייקל בלומברג",e:"Michael Bloomberg",h:"עסקן ופוליטיקאי, ראש עיר ניו יורק",f:"נולד בבוסטון למשפחה יהודית.",c:"עסקים"},
+  {n:"סטנלי קובריק",e:"Stanley Kubrick",h:"במאי, 2001: A Space Odyssey, The Shining",f:"נולד בניו יורק לאב יהודי-רומני ואם יהודייה-אוסטרית.",c:"בידור"},
+  {n:"סטיבן ספילברג",e:"Steven Spielberg",h:"במאי, Schindler's List, E.T.",f:"נולד בסינסינטי. ביים את 'רשימת שינדלר' וייסד USC Shoah Foundation.",c:"בידור"},
+  {n:"פול קרוגמן",e:"Paul Krugman",h:"כלכלן, פרס נובל לכלכלה 2008",f:"נולד בניו יורק. כותב הטור הכלכלי המשפיע ב-NY Times.",c:"מדע"},
+  {n:"מילטון פרידמן",e:"Milton Friedman",h:"כלכלן, פרס נובל לכלכלה 1976",f:"נולד בניו יורק להורים יהודים מהונגריה. אבי הניאו-ליברליזם.",c:"מדע"},
+  {n:"דניאל כהנמן",e:"Daniel Kahneman",h:"פסיכולוג, פרס נובל לכלכלה 2002",f:"נולד בתל אביב. מחקרו שינה את הבנת קבלת ההחלטות האנושית.",c:"מדע"},
+  {n:"קלוד לוי-שטראוס",e:"Claude Lévi-Strauss",h:"אנתרופולוג, מייסד הסטרוקטורליזם",f:"נולד בבריסל למשפחה יהודית-צרפתית.",c:"מדע"},
+  {n:"אמיל דורקהיים",e:"Émile Durkheim",h:"סוציולוג, מייסד הסוציולוגיה המודרנית",f:"נולד באפינל, צרפת, למשפחה רבנית. אביו היה רב.",c:"מדע"},
+  {n:"פרנץ קפקא",e:"Franz Kafka",h:"סופר, The Trial, The Metamorphosis",f:"נולד בפראג למשפחה יהודית-צ'כית. כתב גרמנית.",c:"מדע"},
+
+  /* ── POLITICS ── */
+  {n:"הנרי קיסינג'ר",e:"Henry Kissinger",h:"שר חוץ ארה\"ב, פרס נובל לשלום 1973",f:"נולד בפירת', גרמניה. ברח מהנאצים לארה\"ב בגיל 15.",c:"פוליטיקה"},
+  {n:"ברני סנדרס",e:"Bernie Sanders",h:"סנטור, מועמד לנשיאות",f:"נולד בברוקלין. מייצג גאווה יהודית-אמריקאית שמאלנית.",c:"פוליטיקה"},
+  {n:"רות' ביידר גינסבורג",e:"Ruth Bader Ginsburg",h:"שופטת בית המשפט העליון, ה-RBG",f:"נולדה בברוקלין. אמה הנרייטה צ'ו גינסבורג יהודייה.",c:"פוליטיקה"},
+  {n:"אלנה קאגן",e:"Elena Kagan",h:"שופטת בית המשפט העליון",f:"נולדה בניו יורק. השופטת היהודייה הרביעית בבית המשפט העליון.",c:"פוליטיקה"},
+  {n:"ג'ארד קושנר",e:"Jared Kushner",h:"בעלה של איוונקה טראמפ, יועץ נשיאותי",f:"גדל בניו ג'רזי. משפחתו ניצולי שואה מבלארוס.",c:"פוליטיקה"},
+
+  /* ── SPORTS ── */
+  {n:"סנדי קופקס",e:"Sandy Koufax",h:"שחקן בייסבול, מגדולי כל הזמנים",f:"סירב לזרוק ביום כיפור 1965. סמל הגאווה היהודית בספורט.",c:"ספורט"},
+  {n:"מארק ספיץ",e:"Mark Spitz",h:"שחקן שחייה, 7 מדליות זהב 1972",f:"יהודי-אמריקאי שהציב שיא עולמי באולימפיאדת מינכן.",c:"ספורט"},
+  {n:"אלי ריסמן",e:"Aly Raisman",h:"התעמלותנית, 6 מדליות אולימפיות",f:"גדלה בניו אינגלנד. נשאה את דגל ישראל בטקסי ספורט.",c:"ספורט"},
+  {n:"הנק גרינברג",e:"Hank Greenberg",h:"שחקן בייסבול אגדתי, שנות ה-30-40",f:"סירב לשחק ביום כיפור. גיבור יהודי-אמריקאי.",c:"ספורט"},
+];
+
+const NOT_JEWISH = [
+  {n:"ג'ים קארי",e:"Jim Carrey",h:"קומיקאי קנדי, The Mask, Ace Ventura",f:"נולד בניומרקט, אונטריו. אבותיו קתולים-אירים.",c:"בידור"},
+  {n:"אנג'לינה ג'ולי",e:"Angelina Jolie",h:"שחקנית, Lara Croft, Maleficent",f:"אביה ג'ון ווייט הוא מצרפת ואמה מן הממוצא הגרמני-שוודי-צ'כי.",c:"בידור"},
+  {n:"בראד פיט",e:"Brad Pitt",h:"שחקן, Fight Club, Once Upon a Time in Hollywood",f:"נולד בשאוני, אוקלהומה. אבותיו אנגלים, גרמנים ואירים.",c:"בידור"},
+  {n:"כריס המסוורת'",e:"Chris Hemsworth",h:"שחקן אוסטרלי, Thor",f:"נולד במלבורן. ממוצא אנגלי-אירי-סקוטי-ולשי.",c:"בידור"},
+  {n:"אמה סטון",e:"Emma Stone",h:"שחקנית, La La Land, Easy A",f:"נולדה בסקוטסדייל, אריזונה. ממוצא שוודי, ולשי ואנגלי.",c:"בידור"},
+  {n:"אילון מאסק",e:"Elon Musk",h:"מייסד טסלה, ספייס-אקס, בעלים של X",f:"נולד בפרטוריה, דרום אפריקה. ממוצא אפריקנר.",c:"עסקים"},
+  {n:"ויל פארל",e:"Will Ferrell",h:"קומיקאי, Elf, Anchorman",f:"נולד בעיר אירווין, קליפורניה. אבותיו שוודים.",c:"בידור"},
+  {n:"ראסל בראנד",e:"Russell Brand",h:"קומיקאי בריטי, Get Him to the Greek",f:"נולד בגריי בסקס, אנגליה. ממוצא אנגלי.",c:"בידור"},
+  {n:"מדונה",e:"Madonna (entertainer)",h:"מלכת הפופ, Like a Virgin",f:"נולדה בביי סיטי, מישיגן. ממוצא איטלקי-קנדי-צרפתי.",c:"מוזיקה"},
+  {n:"ג'ורג' לוקאס",e:"George Lucas",h:"במאי, Star Wars, Indiana Jones",f:"נולד במודסטו, קליפורניה. ממוצא גרמני ושוויצרי.",c:"בידור"},
+  {n:"אוון וילסון",e:"Owen Wilson",h:"שחקן, Wedding Crashers, Zoolander",f:"נולד בדאלאס, טקסס. ממוצא אירי-ידוע.",c:"בידור"},
+  {n:"ג'ניפר אניסטון",e:"Jennifer Aniston",h:"שחקנית, Rachel ב-Friends",f:"אביה יוון אניסטונאקיס יווני-אמריקאי. אמה ממוצא סקוטי-יווני.",c:"בידור"},
+  {n:"טום הנקס",e:"Tom Hanks",h:"שחקן, Forrest Gump, Cast Away",f:"נולד בקונקורד, קליפורניה. ממוצא פורטוגלי-אנגלי.",c:"בידור"},
+  {n:"מריל סטריפ",e:"Meryl Streep",h:"שחקנית, The Devil Wears Prada, Kramer vs. Kramer",f:"נולדה בניו ג'רזי. ממוצא גרמני ואירי.",c:"בידור"},
+  {n:"ג'וני דפ",e:"Johnny Depp",h:"שחקן, Pirates of the Caribbean, Edward Scissorhands",f:"נולד בקנטאקי. ממוצא אנגלי-אירי עם שורשי צ'רוקי.",c:"בידור"},
+  {n:"ליאונרדו דיקפריו",e:"Leonardo DiCaprio",h:"שחקן, Titanic, The Wolf of Wall Street",f:"נולד בלוס אנג'לס. אביו ממוצא איטלקי, אמו גרמנית-רוסית.",c:"בידור"},
+  {n:"טום קרוז",e:"Tom Cruise",h:"שחקן, Mission Impossible, Top Gun",f:"נולד בסירקיוז, ניו יורק. ממוצא אירי-גרמני.",c:"בידור"},
+  {n:"ויל סמית'",e:"Will Smith",h:"שחקן וראפר, The Fresh Prince, Ali",f:"נולד בפילדלפיה. ממוצא אפריקאי-אמריקאי ומזרח-ניו ג'רזי.",c:"בידור"},
+  {n:"דנזל וושינגטון",e:"Denzel Washington",h:"שחקן, Training Day, Malcolm X",f:"נולד בניו יורק. ממוצא אפריקאי-אמריקאי.",c:"בידור"},
+  {n:"מורגן פרימן",e:"Morgan Freeman",h:"שחקן, The Shawshank Redemption, Driving Miss Daisy",f:"נולד בממפיס, טנסי. ממוצא אפריקאי-אמריקאי.",c:"בידור"},
+  {n:"אופרה וינפרי",e:"Oprah Winfrey",h:"מגישה ועסקית, The Oprah Winfrey Show",f:"נולדה בקוסיוסקו, מיסיסיפי. ממוצא אפריקאי-אמריקאי.",c:"בידור"},
+  {n:"אלן דז'נרס",e:"Ellen DeGeneres",h:"קומיקאית ומגישה, Ellen",f:"נולדה במטיירי, לואיזיאנה. ממוצא אנגלי-אירי.",c:"בידור"},
+  {n:"קווין הארט",e:"Kevin Hart",h:"קומיקאי, Ride Along",f:"נולד בפילדלפיה. ממוצא ברבדי.",c:"בידור"},
+  {n:"כריס רוק",e:"Chris Rock",h:"קומיקאי, Everybody Hates Chris",f:"נולד באנדרוס, דרום קרוליינה. ממוצא אפריקאי-אמריקאי.",c:"בידור"},
+  {n:"אדי מרפי",e:"Eddie Murphy",h:"קומיקאי ושחקן, Beverly Hills Cop",f:"נולד בברוקלין, ניו יורק. ממוצא אפריקאי-אמריקאי.",c:"בידור"},
+  {n:"ביל מארי",e:"Bill Murray",h:"קומיקאי, Groundhog Day, Lost in Translation",f:"נולד באליסון, אילינוי. ממוצא אירי-קתולי.",c:"בידור"},
+  {n:"דן אייקרויד",e:"Dan Aykroyd",h:"קומיקאי, Ghostbusters, Blues Brothers",f:"נולד בוטאווה. ממוצא קנדי-צרפתי.",c:"בידור"},
+  {n:"סטיב מארטין",e:"Steve Martin",h:"קומיקאי ושחקן, The Jerk, Roxanne",f:"נולד בוואקו, טקסס. ממוצא אנגלי.",c:"בידור"},
+  {n:"רובין וויליאמס",e:"Robin Williams",h:"קומיקאי ושחקן, Mrs. Doubtfire, Good Will Hunting",f:"נולד בשיקגו. ממוצא אנגלי-ולשי. כלל לא יהודי.",c:"בידור"},
+  {n:"מייק מאיירס",e:"Mike Myers",h:"שחקן קנדי, Austin Powers, Shrek",f:"נולד בסקרבורו, אונטריו. ממוצא אנגלי-סקוטי.",c:"בידור"},
+  {n:"ראיין גוסלינג",e:"Ryan Gosling",h:"שחקן קנדי, La La Land, The Notebook",f:"נולד בלונדון, אונטריו. ממוצא קנדי-צרפתי.",c:"בידור"},
+  {n:"ראיין ריינולדס",e:"Ryan Reynolds",h:"שחקן קנדי, Deadpool, Free Guy",f:"נולד בוונקובר. ממוצא אנגלי-אירי.",c:"בידור"},
+  {n:"כריס פראט",e:"Chris Pratt",h:"שחקן, Guardians of the Galaxy, Jurassic World",f:"נולד בוירג'יניה מינסוטה. ממוצא גרמני-נורווגי.",c:"בידור"},
+  {n:"כריס אוונס",e:"Chris Evans",h:"שחקן, Captain America",f:"נולד בבוסטון. ממוצא אירי-איטלקי.",c:"בידור"},
+  {n:"דוויין ג'ונסון",e:"Dwayne Johnson",h:"שחקן ואלוף היאבקות, The Rock",f:"נולד בהיילאנד פארק, קליפורניה. ממוצא סמואי ואפריקאי.",c:"בידור"},
+  {n:"יו ג'קמן",e:"Hugh Jackman",h:"שחקן אוסטרלי, Wolverine",f:"נולד בסידני. ממוצא אנגלי.",c:"בידור"},
+  {n:"קייט בלאנשט",e:"Cate Blanchett",h:"שחקנית אוסטרלית, The Lord of the Rings",f:"נולדה במלבורן. ממוצא אנגלי-אירי-אוסטרלי.",c:"בידור"},
+  {n:"ניקול קידמן",e:"Nicole Kidman",h:"שחקנית אוסטרלית, Moulin Rouge",f:"נולדה בהונולולו. ממוצא אנגלי-אירי.",c:"בידור"},
+  {n:"ג'וליה רוברטס",e:"Julia Roberts",h:"שחקנית, Pretty Woman, Erin Brockovich",f:"נולדה באטלנטה. ממוצא אנגלי-אירי.",c:"בידור"},
+  {n:"שרלייז ת'רון",e:"Charlize Theron",h:"שחקנית דרום-אפריקאית, Monster",f:"נולדה בבנוני, דרום אפריקה. ממוצא אפריקנר.",c:"בידור"},
+  {n:"ג'ניפר לורנס",e:"Jennifer Lawrence",h:"שחקנית, The Hunger Games, Silver Linings Playbook",f:"נולדה בלואיוויל, קנטאקי. ממוצא אנגלי-גרמני-אירי.",c:"בידור"},
+  {n:"מרגו רובי",e:"Margot Robbie",h:"שחקנית אוסטרלית, Barbie, I, Tonya",f:"נולדה בדלבי, קווינסלנד. ממוצא אנגלי.",c:"בידור"},
+  {n:"אמה ווטסון",e:"Emma Watson",h:"שחקנית, הרמיוני ב-Harry Potter",f:"נולדה בפריז. ממוצא אנגלי.",c:"בידור"},
+  {n:"קיאנו ריבס",e:"Keanu Reeves",h:"שחקן, The Matrix, John Wick",f:"נולד בביירות, לבנון. ממוצא הוואי-לבנוני-קנדי.",c:"בידור"},
+  {n:"מאט דיימון",e:"Matt Damon",h:"שחקן, Good Will Hunting, The Martian",f:"נולד בקיימברידג', מסצ'וסטס. ממוצא אנגלי-שוודי.",c:"בידור"},
+  {n:"בן אפלק",e:"Ben Affleck",h:"שחקן ובמאי, Gone Girl",f:"נולד בברקלי, קליפורניה. ממוצא אנגלי-אירי.",c:"בידור"},
+  {n:"כריסטיאן בייל",e:"Christian Bale",h:"שחקן ולשי, Batman, The Dark Knight",f:"נולד בהמפסטד, ווילטשייר, אנגליה. ממוצא ולשי.",c:"בידור"},
+  {n:"יואן מקגרגור",e:"Ewan McGregor",h:"שחקן סקוטי, Obi-Wan Kenobi",f:"נולד בקרייף, סקוטלנד. ממוצא סקוטי.",c:"בידור"},
+  {n:"אלטון ג'ון",e:"Elton John",h:"זמר, Rocket Man, Your Song",f:"נולד בפינר, מידלסקס. ממוצא אנגלי.",c:"מוזיקה"},
+  {n:"דייויד בואי",e:"David Bowie",h:"זמר, Space Oddity, Heroes",f:"נולד בבריקסטון, לונדון. ממוצא אנגלי לחלוטין.",c:"מוזיקה"},
+  {n:"מיק ג'אגר",e:"Mick Jagger",h:"זמר Rolling Stones",f:"נולד בדרטפורד, קנט. ממוצא אנגלי.",c:"מוזיקה"},
+  {n:"פול מקרטני",e:"Paul McCartney",h:"זמר The Beatles",f:"נולד בליברפול. ממוצא אירי-אנגלי.",c:"מוזיקה"},
+  {n:"פרדי מרקיורי",e:"Freddie Mercury",h:"זמר Queen, Bohemian Rhapsody",f:"נולד בזנזיבר. ממוצא פרסי-זורואסטרי לחלוטין.",c:"מוזיקה"},
+  {n:"קורט קוביין",e:"Kurt Cobain",h:"זמר Nirvana, Smells Like Teen Spirit",f:"נולד באברדין, וושינגטון. ממוצא אנגלי-אירי.",c:"מוזיקה"},
+  {n:"מייקל ג'קסון",e:"Michael Jackson",h:"מלך הפופ, Thriller",f:"נולד בגארי, אינדיאנה. ממוצא אפריקאי-אמריקאי.",c:"מוזיקה"},
+  {n:"ברוס ספרינגסטין",e:"Bruce Springsteen",h:"זמר, Born to Run, The Boss",f:"נולד בלאונג ברנץ', ניו ג'רזי. ממוצא איטלקי-אירי.",c:"מוזיקה"},
+  {n:"אמינם",e:"Eminem",h:"ראפר, Lose Yourself, 8 Mile",f:"נולד בסנט ג'וזף, מיזורי. ממוצא אנגלי.",c:"מוזיקה"},
+  {n:"ג'יי-זי",e:"Jay-Z",h:"ראפר ועסקן, Empire State of Mind",f:"נולד בברוקלין. ממוצא אפריקאי-אמריקאי.",c:"מוזיקה"},
+  {n:"קניה ווסט",e:"Kanye West",h:"ראפר ומעצב, Gold Digger",f:"נולד באטלנטה. ממוצא אפריקאי-אמריקאי.",c:"מוזיקה"},
+  {n:"טיילור סוויפט",e:"Taylor Swift",h:"זמרת, Shake It Off, Anti-Hero",f:"נולדה בוויסט רידינג, פנסילבניה. ממוצא סקוטי-אנגלי.",c:"מוזיקה"},
+  {n:"אדל",e:"Adele",h:"זמרת בריטית, Hello, Rolling in the Deep",f:"נולדה בטוטנהאם, לונדון. ממוצא אנגלי.",c:"מוזיקה"},
+  {n:"אד שיראן",e:"Ed Sheeran",h:"זמר בריטי, Shape of You",f:"נולד בהליפקס, יורקשייר. ממוצא אנגלי-אירי.",c:"מוזיקה"},
+  {n:"ביונסה",e:"Beyoncé",h:"זמרת, Crazy in Love, Lemonade",f:"נולדה בהיוסטון. ממוצא אפריקאי-אמריקאי.",c:"מוזיקה"},
+  {n:"ריהאנה",e:"Rihanna",h:"זמרת ברברדית, Umbrella, Diamonds",f:"נולדה בסנט מייקל, ברברדוס. ממוצא ברברדי-גיאנה.",c:"מוזיקה"},
+  {n:"בראק אובמה",e:"Barack Obama",h:"נשיא ארה\"ב ה-44, פרס נובל לשלום",f:"נולד בהונולולו. אביו קניאי, אמו מקנזס.",c:"פוליטיקה"},
+  {n:"ביל גייטס",e:"Bill Gates",h:"מייסד מיקרוסופט",f:"נולד בסיאטל. ממוצא אנגלי-גרמני.",c:"עסקים"},
+  {n:"סטיב ג'ובס",e:"Steve Jobs",h:"מייסד אפל",f:"אביו הביולוגי עבדולפטאח ג'נדאלי היה סורי. אמו ג'ואן שיבל אמריקאית.",c:"עסקים"},
+  {n:"ג'ף בזוס",e:"Jeff Bezos",h:"מייסד אמזון",f:"אביו החורג מיגל בזוס קובני. אמו ממוצא אמריקאי.",c:"עסקים"},
+  {n:"וורן באפט",e:"Warren Buffett",h:"'אורקל אומהה', המשקיע הגדול",f:"נולד באומהה, נברסקה. ממוצא אנגלי-גרמני.",c:"עסקים"},
+  {n:"סטיבן הוקינג",e:"Stephen Hawking",h:"פיזיקאי, A Brief History of Time",f:"נולד באוקספורד. ממוצא אנגלי לחלוטין.",c:"מדע"},
+  {n:"צ'ארלס דארווין",e:"Charles Darwin",h:"מדען, תורת האבולוציה",f:"נולד בשרוזברי. ממוצא אנגלי.",c:"מדע"},
+  {n:"ניקולה טסלה",e:"Nikola Tesla",h:"ממציא, החשמל החילופי",f:"נולד בסמיליאן, קרואטיה. ממוצא סרבי.",c:"מדע"},
+  {n:"מיכאל ג'ורדן",e:"Michael Jordan",h:"שחקן כדורסל, 6 אליפויות NBA",f:"נולד בברוקלין. ממוצא אפריקאי-אמריקאי.",c:"ספורט"},
+  {n:"לברון ג'יימס",e:"LeBron James",h:"שחקן כדורסל, The King",f:"נולד באקרון, אוהיו. ממוצא אפריקאי-אמריקאי.",c:"ספורט"},
+  {n:"טייגר וודס",e:"Tiger Woods",h:"שחקן גולף, 15 אליפויות מייג'ור",f:"נולד בסייפרס, קליפורניה. ממוצא תאי-אפריקאי.",c:"ספורט"},
+  {n:"רוג'ר פדרר",e:"Roger Federer",h:"שחקן טניס שוויצרי, 20 גראנד סלאמים",f:"נולד בבאזל. ממוצא שוויצרי-דרום-אפריקאי.",c:"ספורט"},
+  {n:"ליאונל מסי",e:"Lionel Messi",h:"שחקן כדורגל ארגנטינאי",f:"נולד ברוזריו, ארגנטינה. ממוצא איטלקי.",c:"ספורט"},
+  {n:"כריסטיאנו רונאלדו",e:"Cristiano Ronaldo",h:"שחקן כדורגל פורטוגלי",f:"נולד בפונשל, מדיירה. ממוצא פורטוגלי.",c:"ספורט"},
+  {n:"טום ברייד",e:"Tom Brady",h:"שחקן פוטבול, 7 אליפויות Super Bowl",f:"נולד בסן מטאו, קליפורניה. ממוצא אירי-גרמני.",c:"ספורט"},
+  {n:"סרינה וויליאמס",e:"Serena Williams",h:"שחקנית טניס, 23 גראנד סלאמים",f:"נולדה בסגינאו, מישיגן. ממוצא אפריקאי-אמריקאי.",c:"ספורט"},
+  {n:"מוחמד עלי",e:"Muhammad Ali",h:"אגרוף, 'הגדול ביותר', שלוש אליפויות עולמיות",f:"נולד כקאסיוס קליי בלואיוויל. מוסלמי.",c:"ספורט"},
+  {n:"וויין גרצקי",e:"Wayne Gretzky",h:"שחקן הוקי קנדי, 'הגדול ביותר בהוקי'",f:"נולד בברנטפורד, אונטריו. ממוצא אוקראיני-בלארוסי.",c:"ספורט"},
+  {n:"מייקל פלפס",e:"Michael Phelps",h:"שחקן שחייה, 23 מדליות זהב אולימפיות",f:"נולד בבלטימור, מרילנד. ממוצא אנגלי-אירי.",c:"ספורט"},
+  {n:"יוסיין בולט",e:"Usain Bolt",h:"קל-הרגליים, 100 מ' ב-9.58 שניות",f:"נולד בטרלוני, ג'מייקה. ממוצא ג'מייקאי.",c:"ספורט"},
+];
+
+/* patrilineal – Jewish FATHER, non-Jewish mother → NOT halachically Jewish */
+const PATERNAL = [
+  {n:"ג'יימי לי קרטיס",e:"Jamie Lee Curtis",h:"שחקנית, Halloween, Freaky Friday",f:"אביה טוני קרטיס יהודי – אך אמה ג'נט לי (שנולדה ג'נט מוריסון) אינה יהודייה. אבהי בלבד.",c:"בידור"},
+  {n:"גווינת' פאלטרו",e:"Gwyneth Paltrow",h:"שחקנית, Shakespeare in Love, Iron Man",f:"אביה ברוס פאלטרו יהודי – אך אמה בליית' דנר אינה יהודייה. לפי ההלכה אינה יהודייה.",c:"בידור"},
+  {n:"ג'וש ברולין",e:"Josh Brolin",h:"שחקן, No Country for Old Men, Avengers",f:"אביו ג'יימס ברולין יהודי – אך אמו ג'יין קמרון אייג' אינה יהודייה.",c:"בידור"},
+  {n:"וינונה ריידר",e:"Winona Ryder",h:"שחקנית, Stranger Things, Edward Scissorhands",f:"אביה מייקל הורוביץ יהודי – אך אמה סינת'יה פאלמר אינה יהודייה. אבהי בלבד.",c:"בידור"},
+  {n:"סטיבן טיילר",e:"Steven Tyler",h:"זמר Aerosmith, Dream On",f:"אביו ויקטור טאלריקו ממוצא ליטאי-יהודי – אך אמו סוזן ראי איטלקית. אבהי בלבד.",c:"מוזיקה"},
+];
+
+/* ─── GAME STATE ─────────────────────────────────────────────────────── */
+const imgCache = {};
+const ALL_OTHER = [...NOT_JEWISH, ...PATERNAL];
+const MAX_Q = 10;
+const TIMER_SECS = 10;
+let score = 0, streak = 0, qNum = 0, answered = false;
+let usedJewish = [], usedOther = [];
+let currentJ = null, currentO = null, currentCorrectIdx = 0;
+let jewishHistory = [], otherHistory = [];
+let timerInterval = null, timeLeft = 0;
+let advanceTimeout = null, advanceLeft = 0;
+let audioCtx = null;
+
+const QTEXTS = [
+  'מי מהשניים יהודי? 🤔','זהה את היהודי! 🕵️','נחש נחש... 🎯',
+  'מי מהם? 🧐','האם אתה יודע? 😏','חשוב טוב! 🧠','הפעם קל? 😤',
+];
+const CORRECT_REACTIONS = ['🔥 גאון!','⭐ בום!','💥 מושלם!','🎉 ידעת!','✨ נכון לחלוטין!','😎 לא מפתיע!','🫡 מדהים!','🏆 כל הכבוד!'];
+const WRONG_REACTIONS   = ['😬 אוי...','💀 ממש לא','🫠 אוף!','😅 ניסיון טוב','🙈 לא בדיוק...','🤦 הפעם לא'];
+const TIMEUP_REACTIONS  = ['⏰ פספסת!','🏃 יאלה, מהר!','⌛ נגמר הזמן!'];
+const rnd = arr => arr[Math.floor(Math.random()*arr.length)];
+
+/* ─── AUDIO ──────────────────────────────────────────────────────────── */
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+function tone(freq, type, startT, dur, vol=0.22) {
+  try {
+    const ctx = getCtx();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, ctx.currentTime + startT);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startT + dur);
+    o.start(ctx.currentTime + startT);
+    o.stop(ctx.currentTime + startT + dur);
+  } catch(e){}
+}
+function playCorrect() {
+  tone(523,'sine',0,.25); tone(659,'sine',.1,.25); tone(784,'sine',.2,.35);
+}
+function playWrong() {
+  tone(330,'sawtooth',0,.15,.18); tone(220,'sawtooth',.15,.25,.18);
+}
+function playTick() { tone(900,'square',0,.05,.06); }
+function playTimeUp() {
+  tone(400,'square',0,.12,.18); tone(280,'square',.14,.18,.18);
+}
+function playEnd(good) {
+  if (good) {
+    [523,659,784,1047].forEach((f,i)=>tone(f,'sine',i*.12,.3));
+  } else {
+    [392,349,330,294].forEach((f,i)=>tone(f,'sine',i*.15,.3,.15));
+  }
+}
+
+/* ─── TIMER ──────────────────────────────────────────────────────────── */
+function startTimer() {
+  timeLeft = TIMER_SECS;
+  updateTimer();
+  timerInterval = setInterval(()=>{
+    timeLeft = Math.max(0, timeLeft - 0.1);
+    updateTimer();
+    const s = Math.ceil(timeLeft);
+    if (s <= 3 && Math.abs(timeLeft - Math.round(timeLeft)) < 0.12) playTick();
+    if (timeLeft <= 0) { clearTimer(); onTimeUp(); }
+  }, 100);
+}
+function clearTimer() { clearInterval(timerInterval); timerInterval = null; }
+
+/* ─── AUTO-ADVANCE ───────────────────────────────────────────────────── */
+const ADVANCE_SECS = 3;
+function startAutoAdvance() {
+  advanceLeft = ADVANCE_SECS;
+  const nb = document.getElementById('nb');
+  const nextFn = qNum >= MAX_Q ? renderEnd : render;
+  function tick() {
+    if (!document.getElementById('nb')) return;
+    nb.textContent = (qNum >= MAX_Q ? 'ראה תוצאות' : 'שאלה הבאה') + ` (${advanceLeft}) ←`;
+    if (advanceLeft <= 0) { nextFn(); return; }
+    advanceLeft--;
+    advanceTimeout = setTimeout(tick, 1000);
+  }
+  nb.onclick = () => { clearTimeout(advanceTimeout); nextFn(); };
+  tick();
+}
+function clearAdvance() { clearTimeout(advanceTimeout); advanceTimeout = null; }
+function updateTimer() {
+  const bar = document.getElementById('tbar');
+  const num = document.getElementById('tnum');
+  if (!bar) return;
+  const pct = (timeLeft / TIMER_SECS) * 100;
+  bar.style.width = pct + '%';
+  bar.style.background = pct>50 ? '#5a9e1b' : pct>25 ? '#e6820a' : '#e04b4a';
+  if (num) {
+    const s = Math.ceil(timeLeft);
+    num.textContent = s;
+    num.className = 'timer-num' + (s<=3?' urgent':'');
+  }
+}
+function onTimeUp() {
+  if (answered) return;
+  playTimeUp();
+  answered = true;
+  clearTimer();
+  document.querySelectorAll('.card').forEach(c=>c.classList.add('disabled'));
+  document.getElementById('fb').textContent = rnd(TIMEUP_REACTIONS) + ' ' + currentJ.f;
+  document.getElementById('nb').style.display = 'block';
+  const ci = currentCorrectIdx;
+  const card = document.getElementById(`card-${ci}`);
+  if (card) { card.classList.add('reveal'); document.getElementById(`res-${ci}`).textContent = '✓ זה הנכון'; }
+  recordHistory();
+  startAutoAdvance();
+}
+
+/* ─── WIKIPEDIA IMAGES ───────────────────────────────────────────────── */
+async function fetchImgs(titles) {
+  const t = titles.map(encodeURIComponent).join('|');
+  try {
+    const r = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${t}&prop=pageimages&format=json&pithumbsize=300&pilicense=any&origin=*`);
+    const d = await r.json();
+    for (const p of Object.values(d.query.pages)) {
+      if (p.thumbnail) imgCache[p.title] = p.thumbnail.source;
+    }
+  } catch(e){}
+}
+async function preloadImages() {
+  const all = [...JEWISH, ...ALL_OTHER].map(p=>p.e);
+  const chunks = [];
+  for (let i=0; i<all.length; i+=15) chunks.push(all.slice(i,i+15));
+  await Promise.all(chunks.map(fetchImgs));
+}
+
+/* ─── RENDER ─────────────────────────────────────────────────────────── */
+function pickRandom(arr, used) {
+  const avail = arr.filter((_,i)=>!used.includes(i));
+  if (!avail.length) { used.length=0; return pickRandom(arr,used); }
+  const idx = arr.indexOf(avail[Math.floor(Math.random()*avail.length)]);
+  used.push(idx);
+  return arr[idx];
+}
+function photoEl(p) {
+  const src = imgCache[p.e] || imgCache[p.e.replace(/ /g,'_')];
+  if (src) return `<img class="celeb-photo" src="${src}" alt="${p.n}" loading="lazy">`;
+  const ini = p.n.split(' ').filter(w=>w.length>0).map(w=>w[0]).join('').slice(0,2);
+  return `<div class="photo-ph">${ini}</div>`;
+}
+
+/* ─── SIDE PANELS ────────────────────────────────────────────────────── */
+function panelPhotoEl(p, isJewish) {
+  const src = imgCache[p.e] || imgCache[p.e.replace(/ /g,'_')];
+  const name = p.n.split(' ').slice(0,2).join(' ');
+  const photo = src
+    ? `<img class="panel-photo" src="${src}" alt="${p.n}">`
+    : `<div class="panel-ph">${p.n.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>`;
+  return `<div class="panel-item">${photo}<div class="panel-name">${name}</div></div>`;
+}
+function updatePanels() {
+  const jp = document.getElementById('jewish-panel');
+  const op = document.getElementById('other-panel');
+  if (jp) jp.innerHTML = '<div class="panel-title">✡ יהודים</div>' + jewishHistory.map(p=>panelPhotoEl(p,true)).join('');
+  if (op) op.innerHTML = '<div class="panel-title">לא יהודים</div>' + otherHistory.map(p=>panelPhotoEl(p,false)).join('');
+}
+function recordHistory() {
+  if (currentJ) jewishHistory.push(currentJ);
+  if (currentO) otherHistory.push(currentO);
+  updatePanels();
+}
+
+
+function render() {
+  if (qNum >= MAX_Q) { renderEnd(); return; }
+  clearTimer();
+  clearAdvance();
+  const app = document.getElementById('app');
+  qNum++;
+  answered = false;
+  currentJ = pickRandom(JEWISH, usedJewish);
+  currentO = pickRandom(ALL_OTHER, usedOther);
+  const pair = Math.random()>.5 ? [currentJ, currentO] : [currentO, currentJ];
+  currentCorrectIdx = pair.indexOf(currentJ);
+
+  const streakEl = streak>=3 ? `<div class="streak">🔥 ${streak} ברצף!</div>` : streak===2 ? `<div class="streak">✌️ רצף 2</div>` : '<div></div>';
+
+  app.innerHTML = `
+    <div class="topbar">
+      <div class="score-wrap"><div class="lbl">ניקוד</div><div class="val">${score}</div></div>
+      ${streakEl}
+      <div class="progress">${qNum} / ${MAX_Q}</div>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-bg"><div id="tbar" class="timer-fill" style="width:100%;background:#5a9e1b"></div></div>
+      <div id="tnum" class="timer-num">${TIMER_SECS}</div>
+    </div>
+    <p class="question">${rnd(QTEXTS)}</p>
+    <div class="cards">
+      ${pair.map((p,i)=>`
+        <div class="card" id="card-${i}" onclick="answer(${i===currentCorrectIdx},${i},${1-i})">
+          <div class="key-badge">${i+1}</div>
+          ${photoEl(p)}
+          <div class="card-name">${p.n}</div>
+          <div class="card-hint">${p.h}</div>
+          <div class="cat-badge">${p.c}</div>
+          <div class="card-result" id="res-${i}"></div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="feedback" id="fb">👆 לחץ או השתמש במקשים 1 / 2</div>
+    <button class="next-btn" id="nb" style="display:none"></button>
+    <p style="text-align:center;font-size:11px;color:#ccc;margin-top:.5rem">מקש <b style="color:#aaa">1</b> לכרטיס הראשון &nbsp;·&nbsp; מקש <b style="color:#aaa">2</b> לכרטיס השני &nbsp;·&nbsp; Enter להמשך</p>`;
+  startTimer();
+}
+
+function answer(correct, clickIdx, otherIdx) {
+  if (answered) return;
+  answered = true;
+  clearTimer();
+  if (correct) {
+    score++; streak++;
+    playCorrect();
+    document.getElementById('fb').textContent = rnd(CORRECT_REACTIONS) + ' ' + currentJ.f;
+  } else {
+    streak = 0;
+    playWrong();
+    document.getElementById('fb').textContent = rnd(WRONG_REACTIONS) + ' ' + currentJ.f;
+  }
+  document.querySelectorAll('.card').forEach(c => c.classList.add('disabled'));
+  if (correct) {
+    document.getElementById(`card-${clickIdx}`).classList.add('correct');
+    document.getElementById(`res-${clickIdx}`).textContent = '✓ בחרת נכון! 🎉';
+  } else {
+    document.getElementById(`card-${clickIdx}`).classList.add('wrong');
+    document.getElementById(`res-${clickIdx}`).textContent = '✗ לא נכון';
+    document.getElementById(`card-${otherIdx}`).classList.add('reveal');
+    document.getElementById(`res-${otherIdx}`).textContent = '✓ זה הנכון';
+  }
+  recordHistory();
+  document.getElementById('nb').style.display = 'block';
+  startAutoAdvance();
+}
+
+function renderEnd() {
+  clearTimer();
+  const pct = Math.round((score/MAX_Q)*100);
+  playEnd(pct>=60);
+  const msg = pct===100?'מושלם! אתה מומחה תרבות יהודית! 🏆 איך אתה יודע את כל זה?!'
+    :pct>=80?'כל הכבוד! ידע מרשים מאוד! 🌟'
+    :pct>=60?'לא רע בכלל! עוד קצת תרגול... 😏'
+    :pct>=40?'ניסיון נחמד, אבל יש על מה לעבוד 😅'
+    :'אאאא... נסה שוב, זה לא כל כך קשה! 😬';
+  const stars = pct>=90?'🥇🥇🥇':pct>=70?'🥈🥈':pct>=40?'🥉':'';
+  document.getElementById('app').innerHTML = `
+    <div class="end-screen">
+      <div style="font-size:42px;margin-bottom:8px">✡</div>
+      <div class="end-score">${score}/${MAX_Q}</div>
+      <div style="font-size:26px;margin:.4rem 0">${stars}</div>
+      <div class="end-pct">${pct}% נכון</div>
+      <div class="end-msg">${msg}</div>
+      <button class="next-btn" onclick="restart()" style="max-width:200px;margin:0 auto">משחק חדש ↗</button>
+    </div>`;
+}
+
+function restart() {
+  score=0; streak=0; qNum=0; answered=false;
+  usedJewish=[]; usedOther=[];
+  jewishHistory=[]; otherHistory=[];
+  updatePanels();
+  render();
+}
+
+/* ─── KEYBOARD ───────────────────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (answered) {
+    if (e.key==='Enter'||e.key===' ') { e.preventDefault(); document.getElementById('nb')?.click(); }
+    return;
+  }
+  let idx = -1;
+  if (e.key==='1') idx = 0;
+  if (e.key==='2') idx = 1;
+  if (idx < 0) return;
+  e.preventDefault();
+  document.getElementById(`card-${idx}`)?.click();
+});
+
+/* ─── BOOT ────────────────────────────────────────────────────────────── */
+(async () => {
+  document.getElementById('app').innerHTML = '<div class="loading"><div class="spin">✡</div><br>טוען תמונות ממאגר של ' + (JEWISH.length+ALL_OTHER.length) + ' אנשים מפורסמים...</div>';
+  await preloadImages();
+  render();
+})();
+</script>
+
+
+</body></html>
